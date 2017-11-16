@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <!--<link href="css/bootstrap.min.css" rel="stylesheet">-->
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">-->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/gerarInserts.js"></script>
+    <title>Gerador Inserts</title>
+</head>
+<body>
+<nav class="nav navbar-default navbar-inverse">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#barra-navegacao">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">
+                <span class="glyphicon glyphicon-book"></span>
+                OneClique
+            </a>
+
+        </div>
+        <div class="collapse navbar-collapse" id="barra-navegacao">
+            <ul class="nav navbar-nav navbar-right" style="font-size: 16px;">
+                <li class="nav-item">
+                    <a href="#">Direct</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" data-toggle="modal" data-target="#myModal">
+                        Ajuda
+                        <span class="glyphicon glyphicon-question-sign" style="font-size: 16px;"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="page-header">
+    <h1 align="center">
+        Gerador Inserts
+    </h1>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Como usar as colunas</h4>
+            </div>
+            <div class="modal-body">
+                <b>String</b> : Apenas digite o nome da coluna, será gerado nomes iterativos de acordo com o nome da coluna.<br>
+                <b>Inteiro/FK</b> : Digite o nome da coluna, seguido do intervalo de números que podem ser escolhidos aleatoriamente,
+                EX: nomecoluna,10-60 (Nessa ordem e sintâxe).<br>
+                <b>String C/ Num</b>: Apenas digite o nome da coluna, será gerado números aleatorios dentro de uma string.<br>
+                <b>Data</b>: Digite o nome da coluna, a data é gerada a partir do primeiro argumento e com limite no segundo argumento
+                Ex: dtnasc,1955-2000 (È Gerado datas aleatorias entre 1955 e 2000).<br>
+                <b>Inteiro/PK</b>: Digite o nome da coluna, depois digite o numero que irá iniciar a sequência, EX:nomecoluna,10, será
+                gerado de 10 a 10+n, sendo n o número de inserts.<br>
+                <b>String/Variado</b>: Digite o nome da coluna, depois digite as palavras que podem ser selecionadas para a coluna,
+                não há limites de palavras. EX: nomecoluna,ufc-futebol-volei-basquete (Separadas por traço).<br>
+                <b>Nome</b>: Apenas digite o nome da coluna, será gerado nome e sobrenome aleatorio<br>
+                <b>CPF</b>: Apenas digite o nome da coluna, será gerado um CPF valido aleatório<br>
+                <b>Placa Veicular</b>: Gera uma string de placa veicular no padrão 'XXX-9999'.<br>
+                <b>Data Customizada</b>: Digite o nome da coluna e como parâmetro digite 0 ou 1, quando 0 a data atual é gerada como
+                valor da coluna, quando 1 é gerado uma data futura (7 dias para frente).
+                Ex: dataatual,0<br>
+                <b>Foreign Key Customizada</b>: Preenche o campo da foreign key através de um select, o primeiro parametro é o nome da
+                tabela que está sendo referenciada pela FK, o segundo parâmetro é o nome da coluna referenciada na tabela destino.
+                Contexto: Você tem uma tabela 'carro' e precisa por em uma coluna chamada 'cpfdono' o cpf do dono do carro, que é
+                a chave primária da tabela 'cliente', então vocÊ utiliza, 'CPFDONO,cliente-cpf', então sera selecionado o cpf do
+                cliente 0 ao n, sendo n o número de inserts(não pode ser maior que o n° de clientes da tabela 'cliente'.<br>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <form>
+        <div class="form-row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="tabela">Tabela</label>
+                    <input type="text" class="form-control" id="tabela" placeholder="Nome da Tabela" name="tabelinnha">
+                </div>
+                <div class="form-group">
+                <label for="tabela">Quantidade de Inserts</label>
+                <input type="text" class="form-control" id="numinserts" placeholder="Num de Inserts">
+                </div>
+                <div id="colunas">
+                    <label>Colunas</label>
+                    <div class='form-inline'>
+                        <input class='form-control' type='text' id='coluna1' placeholder='Coluna1' readonly="true"/>
+                            <select class='form-control' id='tipo' readonly="true">
+                                <option value='1'>String</option>
+                                <option value='2'>Inteiro/FK</option>
+                                <option value='3'>String c/ Num</option>
+                                <option value='4'>Data</option>
+                                <option value='5'>Inteiro/PK</option>
+                                <option value='6'>String/Variado</option>
+                                <option value='7'>Nome</option>
+                                <option value='8'>CPF</option>
+                                <option value='9'>Placa Veicular</option>
+                                <option value='10'>Data C/</option>
+                                <option value='11'>Foreign Key C/</option>
+                            </select>
+
+                    </div>
+                </div>
+                <br>
+                <div class="form-group">
+                    <button type="button" id="enviar" class="btn btn-default btn-info btn-block">Enviar</button>
+                </div>
+                <div id="msgerro" class="alert alert-warning alert-dismissible col-xs-6 col-xs-offset-3"  role="alert" style="display:none;">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Inválido</strong> Informe ao menos 3 caracteres para o apelido.
+                </div>
+            </div>
+            <div class="form-group col-sm-6 col-sm-offset-2">
+                <label for="qtd">Numero de Colunas</label>
+                <div class="form-inline">
+                    <input class="form-control" type="text" id="qtd" placeholder="Quantidade"/>
+                    <button id="addcoluna" type="button" class="btn btn-default">+</button>
+                </div>
+                <br>
+                <div class="form-group">
+                <button type="button" id="limpar" class="btn btn-default btn-info">Limpar</button>
+                </div>
+                <br>
+                <h2>Inserts:</h2>
+                <div class="well">
+                    <div id="resultado" style="white-space: normal;">
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+</body>
+</html>
+
